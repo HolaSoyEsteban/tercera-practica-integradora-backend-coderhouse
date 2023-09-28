@@ -6,11 +6,12 @@ import { generateRandomString, createHash } from '../utils.js'
 import UserModel from '../models/user.model.js'
 import nodemailer from 'nodemailer'
 import config from '../config/config.js'
-import { 
-  createUserController, 
-  failCreateUserController, 
-  loginUserController, 
-  errorLoginUserController, 
+import bcrypt from 'bcryptjs'
+import {
+  createUserController,
+  failCreateUserController,
+  loginUserController,
+  errorLoginUserController,
   failLoginUserController,
   githubLoginUserController,
   githubCallbackLoginUserController,
@@ -23,7 +24,7 @@ router.post('/register', createUserController); // crea un usuario
 
 router.get('/failRegister', failCreateUserController) // devuelve un error al registrar un usuario
 
-router.post('/login', passport.authenticate('login', { failureRedirect: '/api/sessions/failLogin'}), loginUserController, errorLoginUserController); // inicia sesión
+router.post('/login', passport.authenticate('login', { failureRedirect: '/api/sessions/failLogin' }), loginUserController, errorLoginUserController); // inicia sesión
 
 router.get('/failLogin', failLoginUserController) // devuelve un error al iniciar sesión
 
@@ -58,7 +59,7 @@ router.post('/forget-password', async (req, res) => {
   }
   try {
     await transporter.sendMail(message)
-    res.json({ status: 'success', message: `Email enviado con exito a ${email} para restablecer la contraseña`})
+    res.json({ status: 'success', message: `Email enviado con exito a ${email} para restablecer la contraseña` })
   } catch (err) {
     res.status(500).json({ status: 'errorx', error: err.message })
   }
@@ -68,7 +69,8 @@ router.get('/verify-token/:token', async (req, res) => {
   const token = req.params.token
   const userPassword = await UserPasswordModel.findOne({ token })
   if (!userPassword) {
-    return res.status(404).json({ status: 'error', error: 'Token no válido / El token ha expirado' })
+    // return res.status(404).json({ status: 'error', error: 'Token no válido / El token ha expirado' })
+    return res.redirect('/forget-password');
   }
   const user = userPassword.email
   res.render('reset-password', { user })
@@ -77,9 +79,17 @@ router.get('/verify-token/:token', async (req, res) => {
 router.post('/reset-password/:user', async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.params.user })
-    await UserModel.findByIdAndUpdate(user._id, { password: createHash(req.body.newPassword) })
+
+    const newPassword = req.body.newPassword;
+
+    const passwordsMatch = await bcrypt.compareSync(newPassword, user.password);
+    if (passwordsMatch) {
+      return res.json({ status: 'error', message: 'No puedes usar la misma contraseña' });
+    }
+
+    await UserModel.findByIdAndUpdate(user._id, { password: createHash(newPassword) })
     res.json({ status: 'success', message: 'Se ha creado una nueva contraseña' })
-    await UserPasswordModel.deleteOne({ email: req.params.user})
+    await UserPasswordModel.deleteOne({ email: req.params.user })
   } catch (err) {
     res.json({ status: 'error', message: 'No se ha podido crear la nueva contraseña' })
   }
