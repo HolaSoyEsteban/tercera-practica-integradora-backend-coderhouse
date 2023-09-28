@@ -30,6 +30,7 @@ app.use(express.json()); // middleware para parsear el body de las requests a JS
 
 app.use(errorHandler)
 app.use(express.static('./src/public')); // middleware para servir archivos estáticos
+app.use(express.urlencoded({ extended: true }))
 
 // configuracion de la sesion
 app.use(session({

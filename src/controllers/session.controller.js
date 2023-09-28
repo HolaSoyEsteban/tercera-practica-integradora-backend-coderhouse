@@ -2,6 +2,10 @@ import passport from 'passport';
 import Cart from '../models/cart.model.js'
 import UserDTO from '../dto/User.js'
 import logger from '../logger.js'
+import UserModel from '../models/user.model.js'
+import nodemailer from 'nodemailer'
+import { generateRandomString, createHash } from '../utils.js'
+import UserPasswordModel from '../models/user-password.model.js'
 
 export const createUserController = async (req, res, next) => {
   passport.authenticate('register', async (err, user, info) => {
@@ -82,3 +86,34 @@ export const readInfoUserController = (req, res) => {
     res.status(401).json({ error: 'No autorizado' });
   }
 }
+
+// export const forgetpasswordUserController = async (req, res) => {
+//   const email = req.body.email
+//   const user = await UserModel.findOne({ email })
+//   if (!user) {
+//     return res.status(404).json({ status: 'error', error: 'User not found' });
+//   }
+//   const token = generateRandomString(16)
+//   await UserPasswordModel.create({ email, token })
+//   const mailerConfig = {
+//     service: 'gmail',
+//     auth: { user: config.nodemailer.user, pass: config.nodemailer.pass }
+//   }
+//   let transporter = nodemailer.createTransport(mailerConfig)
+//   let message = {
+//     from: config.nodemailer.user,
+//     to: email,
+//     subject: '[Coder e-commerce API Backend] Reset you password',
+//     html: `<h1>[Coder e-commerce API Backend] Reset you password</h1>
+//     <hr>Debes resetear tu password haciendo click en el siguiente link <a href="https://localhost:8080/reset-password/${token}" target="_blank">https://localhost:8080/reset-password/${token}</a>
+//     <hr>
+//     Saludos cordiales,<br>
+//     <b>The Coder e-commerce API Backend</b>`
+//   }
+//   try {
+//     await transporter.sendMail(message)
+//     res.json({ status: 'success', message: `Email enviado con exito a ${email} para restablecer la contraseña`})
+//   } catch (err) {
+//     res.status(500).json({ status: 'errorx', error: err.message })
+//   }
+// }

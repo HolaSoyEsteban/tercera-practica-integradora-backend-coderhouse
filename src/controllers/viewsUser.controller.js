@@ -41,3 +41,10 @@ export const viewsUserLogoutController = (req, res) => {
         res.redirect('/login');
     });
 }
+
+export const viewsUserForgetPasswordController = (req, res) => {
+
+    res.render('forget-password');
+}
+
+
