@@ -7,7 +7,6 @@ import logger from '../logger.js'
 export const createProductController = async (req, res) => {
   try {
     const product = req.body
-    // console.log(product)
     if (!product.title || !product.price || !product.description || !product.code || !product.stock || !product.category) {
       const errorInfo = generateProductErrorInfo(product);
       CustomError.createError({

@@ -14,7 +14,7 @@
     <label for="category">Categoría</label>
     <input type="text" name="category" id="category" placeholder="Categoría del producto" required>
 </form>
-<button id="createBtn">Crear producto</button>
+<button id="createBtn" data-email="{{this.userInfo.email}}">Crear producto</button>
 <hr />
 <table id="realProductsTable">
     <thead>
@@ -29,7 +29,7 @@
         </tr>
     </thead>
     <tbody>
-    {{#each products}}
+    {{#each this.products}}
         <tr>
             <td><button onclick="deleteProduct('{{this._id}}')">Eliminar</button></td>
             <td>{{this.title}}</td>

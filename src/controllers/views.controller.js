@@ -38,7 +38,11 @@ export const readViewsRealTimeProductsController = async (req, res) => {
   try {
     //const products = await ProductModel.find().lean().exec();
     const products = await ProductService.getAll()
-    res.render('realTimeProducts', { products });
+    const userInfo = {
+      email: req.session.user.email,
+      role: req.session.user.role,
+    };
+    res.render('realTimeProducts', { products, userInfo });
   } catch (error) {
     logger.error('Error al leer los productos en tiempo real:', error);
     res.status(500).json({ error: 'Error al leer los productos en tiempo real' });
