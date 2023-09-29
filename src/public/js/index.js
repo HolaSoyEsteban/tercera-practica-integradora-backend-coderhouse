@@ -12,7 +12,7 @@ document.getElementById('createBtn').addEventListener('click', () => {
     code: document.getElementById('code').value,
     stock: document.getElementById('stock').value,
     category: document.getElementById('category').value,
-    // owner: userEmail
+    owner: userEmail,
     } // crea un objeto con los datos del formulario
   fetch('/api/products', {
     method: 'POST', // método HTTP

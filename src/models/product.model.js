@@ -10,6 +10,7 @@ const productSchema = new mongoose.Schema({
     stock: { type: Number, required: true},
     category: { type: String, required: true},
     thumbnail: { type: [String], default: [] },
+    owner: { type: String, ref: 'users', required: true }, // Hacer referencia al usuario por correo electrónico
     // owner: { type: mongoose.Schema.Types.ObjectId, ref: 'users', default: 'admin' },
 });
 
