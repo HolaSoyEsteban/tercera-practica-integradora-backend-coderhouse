@@ -75,6 +75,11 @@ export const addProductCartController = async (req, res) => {
       return;
     }
 
+    if (product.owner == user.email && user.role == 'premium'){
+      res.status(404).json({ error: 'No puedes agregar un producto tuyo al carrito' });
+      return;
+    } // ACAAA
+
     const existingProductIndex = cart.products.findIndex(
       (item) => item.product.toString() === productId
     );
