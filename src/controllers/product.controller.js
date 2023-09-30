@@ -63,6 +63,20 @@ export const deleteProductController = async (req, res) => {
   try {
     const productId = req.params.pid;
 
+    const product = await ProductService.getById(productId)
+    const userInfo = {
+      first_name: req.session.user.first_name,
+      last_name: req.session.user.last_name,
+      email: req.session.user.email,
+      age: req.session.user.age,
+      role: req.session.user.role,
+    };
+
+    if (product.owner != userInfo.email && userInfo.role == 'premium'){
+      res.status(404).json({ error: 'No puedes eliminar este producto' })
+      return;
+    }
+
     //const deletedProduct = await Product.findByIdAndDelete(productId).lean().exec();
     const deletedProduct = await ProductService.delete(productId)
 

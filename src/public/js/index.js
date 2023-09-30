@@ -4,16 +4,39 @@ const table = document.getElementById('realProductsTable') // referencia a la ta
 document.getElementById('createBtn').addEventListener('click', () => {
   const createBtn = document.getElementById('createBtn');
   const userEmail = createBtn.getAttribute('data-email');
+  const userRole = createBtn.getAttribute('data-role');
   console.log(userEmail)
-  const body = {
-    title: document.getElementById('title').value,
-    description: document.getElementById('description').value,
-    price: document.getElementById('price').value,
-    code: document.getElementById('code').value,
-    stock: document.getElementById('stock').value,
-    category: document.getElementById('category').value,
-    owner: userEmail,
-    } // crea un objeto con los datos del formulario
+  let body = ['']
+  if (userRole === 'admin') {
+    body = {
+      title: document.getElementById('title').value,
+      description: document.getElementById('description').value,
+      price: document.getElementById('price').value,
+      code: document.getElementById('code').value,
+      stock: document.getElementById('stock').value,
+      category: document.getElementById('category').value,
+    }
+  } else {
+    body = {
+      title: document.getElementById('title').value,
+      description: document.getElementById('description').value,
+      price: document.getElementById('price').value,
+      code: document.getElementById('code').value,
+      stock: document.getElementById('stock').value,
+      category: document.getElementById('category').value,
+      owner: userEmail,
+    }
+  } // crea un objeto con los datos del formulario
+
+  // const body = {
+  //   title: document.getElementById('title').value,
+  //   description: document.getElementById('description').value,
+  //   price: document.getElementById('price').value,
+  //   code: document.getElementById('code').value,
+  //   stock: document.getElementById('stock').value,
+  //   category: document.getElementById('category').value,
+  //   owner: userEmail,
+  //   } 
   fetch('/api/products', {
     method: 'POST', // método HTTP
     body: JSON.stringify(body), // cuerpo de la request
@@ -73,13 +96,14 @@ socket.on('updatedProducts', data => {
 
   for (const product of data) {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td><button onclick="deleteProduct('${product._id}')">Eliminar</button></td>
-            <td>${product.title}</td>
-            <td>${product.description}</td>
-            <td>${product.price}</td>
-            <td>${product.code}</td>
-            <td>${product.stock}</td>
-            <td>${product.category}</td>`;
+    tr.innerHTML = `
+    <td>${product.title}</td>
+    <td>${product.description}</td>
+    <td>${product.price}</td>
+    <td>${product.code}</td>
+    <td>${product.stock}</td>
+    <td>${product.category}</td>
+    <td><button onclick="deleteProduct('${product._id}')">Eliminar</button></td>`;
     tbody.appendChild(tr);
   }
 });

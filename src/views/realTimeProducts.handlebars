@@ -14,30 +14,30 @@
     <label for="category">Categoría</label>
     <input type="text" name="category" id="category" placeholder="Categoría del producto" required>
 </form>
-<button id="createBtn" data-email="{{this.userInfo.email}}">Crear producto</button>
+<button id="createBtn" data-email={{this.userInfo.email}} data-role={{this.userInfo.role}}>Crear producto</button>
 <hr />
 <table id="realProductsTable">
     <thead>
         <tr>
-            <td></td>
             <td>Producto</td>
             <td>Descripción</td>
             <td>Precio</td>
             <td>Código</td>
             <td>Stock</td>
             <td>Categoria</td>
+            <td></td>
         </tr>
     </thead>
     <tbody>
     {{#each this.products}}
         <tr>
-            <td><button onclick="deleteProduct('{{this._id}}')">Eliminar</button></td>
             <td>{{this.title}}</td>
             <td>{{this.description}}</td>
             <td>{{this.price}}</td>
             <td>{{this.code}}</td>
             <td>{{this.stock}}</td>
             <td>{{this.category}}</td>
+            <td><button onclick="deleteProduct('{{this._id}}')">Eliminar</button></td>
         </tr>
     {{/each}}
     </tbody>
